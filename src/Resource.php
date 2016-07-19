@@ -163,10 +163,14 @@ class Resource implements ArrayInstantiationInterface
 
         foreach ($data as $key => $value) {
             if (strpos($key, '/') === 0) {
+                $value = $value ?: [];
+                if (isset($data['uriParameters'])) {
+                    $value['uriParameters'] = array_merge(!empty($value['uriParameters']) ? $value['uriParameters'] : [], $data['uriParameters']);
+                }
                 $resource->addResource(
                     Resource::createFromArray(
                         $uri.$key,
-                        $value ?: [],
+                        $value,
                         $apiDefinition
                     )
                 );
